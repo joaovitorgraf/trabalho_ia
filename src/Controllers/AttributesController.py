@@ -1,10 +1,16 @@
 from flask import request, jsonify
 
 
-def atributos():
+def Atributos():
     dados = request.get_json()
 
-    if not dados or not "atributos" in dados or not "rgb" in dados:
+    if (
+        not dados
+        or not "personagem" in dados
+        or not "atributos" in dados
+        or not "rgb" in dados
+        or not "numero_atributos" in dados
+    ):
         return jsonify({"erro": "Dados inválidos"}), 400
 
     personagem = dados.get("personagem")
