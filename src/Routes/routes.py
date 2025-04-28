@@ -1,6 +1,6 @@
 from flask import Blueprint
-from src.Controllers.AttributesController import attributes
+from src.Controllers.AttributesController import atributos
 
 routes = Blueprint("routes", __name__)
 
-routes.route("/attributes", methods=["POST"])(attributes)
+routes.route("/atributos", methods=["POST"])(atributos)

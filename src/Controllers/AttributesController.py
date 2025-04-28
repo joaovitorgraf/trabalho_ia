@@ -1,49 +1,54 @@
 from flask import request, jsonify
 
 
-def attributes():
+def atributos():
     dados = request.get_json()
 
-    if not dados or not "attributes" in dados or not "rgb" in dados:
-        return jsonify({"error": "Invalid data"}), 400
+    if not dados or not "atributos" in dados or not "rgb" in dados:
+        return jsonify({"erro": "Dados inválidos"}), 400
 
-    character = dados.get("character")
-    attributes = dados.get("attributes")
+    personagem = dados.get("personagem")
+    atributos = dados.get("atributos")
     rgb = dados.get("rgb")
-    number_attributes = dados.get("number_attributes")
+    numero_atributos = dados.get("numero_atributos")
 
-    if not character:
-        return jsonify({"error": "Character cannot be empty."}), 400
+    if not personagem:
+        return jsonify({"erro": "Personagem não pode estar vazio."}), 400
 
-    attributes_size = len(attributes)
+    tamanho_personagem = len(personagem)
+    tamanho_atributos = len(atributos)
     rgb_size = len(rgb)
 
-    if attributes_size < 3:
-        return jsonify({"error": "The number of attributes must be at least three."})
-
-    if attributes_size < len(character) * number_attributes:
+    if (tamanho_atributos / tamanho_personagem) != numero_atributos:
         return jsonify(
-            {"error": "The number of attributes does not match the size of the array."}
+            {"erro": "O número de personagens não corresponde ao número de atributos."}
         )
 
-    if attributes_size != rgb_size:
+    if tamanho_atributos < 3:
+        return jsonify({"erro": "O número de atributos deve ser pelo menos três."})
+
+    if tamanho_atributos < len(personagem) * numero_atributos:
+        return jsonify(
+            {"erro": "O número de atributos não corresponde ao tamanho do array."}
+        )
+
+    if tamanho_atributos != rgb_size:
         return (
-            jsonify({"error": "The number of attributes and colors do not match."}),
+            jsonify({"erro": "O número de atributos e cores não correspondem."}),
             400,
         )
 
     header = []
 
-    for i, character in enumerate(character):
-        start_index = i * number_attributes
-        end_index = start_index + number_attributes
-        character_attributes = attributes[start_index:end_index]
+    for i, personagem in enumerate(personagem):
+        start_index = i * numero_atributos
+        end_index = start_index + numero_atributos
+        character_attributes = atributos[start_index:end_index]
 
         for attribute in character_attributes:
-            name = f"{character}_{attribute}"
+            name = f"{personagem}_{attribute}"
             header.append(name)
 
     header.append("Classe")
-    print(header)
 
-    return jsonify({"success": "Attributes set successfully."})
+    return jsonify({"sucesso": "Atributos definidos com sucesso."})
