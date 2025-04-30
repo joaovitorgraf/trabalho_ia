@@ -1,5 +1,9 @@
 from flask import request, jsonify
 
+camadas = None
+neuronios = None
+epocas = None
+
 
 def Parametros():
     dados = request.get_json()
@@ -26,3 +30,15 @@ def Parametros():
         return jsonify({"erro": "Epocas não ser 0 ou menor."}), 400
 
     return jsonify({"sucesso": "Parâmetros definidos com sucesso."})
+
+
+def get_camadas():
+    return camadas
+
+
+def get_neuronios():
+    return neuronios
+
+
+def get_epocas():
+    return epocas
