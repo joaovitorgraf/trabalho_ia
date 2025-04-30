@@ -47,7 +47,7 @@ def get_urlImage(pasta_base=PASTA_MEDIA):
 
     for root, _, arquivos in os.walk(pasta_base):
         imagens = [
-            os.path.abspath(os.path.join(root, nome_arquivo))
+            os.path.abspath(os.path.join(root, nome_arquivo)).replace("\\", "/")
             for nome_arquivo in arquivos
             if nome_arquivo.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))
         ]
