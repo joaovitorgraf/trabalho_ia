@@ -1,7 +1,9 @@
 from flask import Flask
+from flask_cors import CORS
 from src.Routes.routes import routes
 
 app = Flask(__name__)
+CORS(app)
 app.register_blueprint(routes)
 
 if __name__ == "__main__":
