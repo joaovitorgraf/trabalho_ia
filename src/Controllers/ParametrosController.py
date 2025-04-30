@@ -6,6 +6,7 @@ epocas = None
 
 
 def Parametros():
+    global camadas, neuronios, epocas
     dados = request.get_json()
 
     if (

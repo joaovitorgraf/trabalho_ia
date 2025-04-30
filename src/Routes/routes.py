@@ -1,7 +1,7 @@
 from flask import Blueprint
 from src.Controllers.AttributesController import Atributos
 from src.Controllers.ParametrosController import Parametros
-from src.Controllers.MediaController import Upload
+from src.Controllers.MediaController import Upload, get_urlImage
 from src.Controllers.ImagemController import Gerar_csv
 from src.Controllers.ProgressoController import obter_progresso
 
@@ -12,3 +12,4 @@ routes.route("/parametros", methods=["POST"])(Parametros)
 routes.route("/upload", methods=["POST"])(Upload)
 routes.route("/gerar-csv", methods=["GET"])(Gerar_csv)
 routes.route("/progresso", methods=["GET"])(obter_progresso)
+routes.route("/get-url-image", methods=["GET"])(get_urlImage)

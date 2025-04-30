@@ -67,7 +67,3 @@ def get_header():
 
 def get_rgb():
     return rgb
-
-
-def get_personagens():
-    return personagens
