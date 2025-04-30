@@ -42,22 +42,25 @@ def Upload():
         return jsonify({"erro": str(e)}), 500
 
 
-def get_urlImage(pasta_base=PASTA_MEDIA):
+def get_urlImage():
+    pasta_base = PASTA_MEDIA
     caminhos_imagens = {}
 
     for root, _, arquivos in os.walk(pasta_base):
         imagens = [
-            os.path.abspath(os.path.join(root, nome_arquivo)).replace("\\", "/")
+            os.path.join(root, nome_arquivo).replace("\\", "/")
             for nome_arquivo in arquivos
             if nome_arquivo.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))
         ]
 
         if imagens:
-            # nome da pasta que contém as imagens
             nome_pasta = os.path.basename(root)
             if nome_pasta not in caminhos_imagens:
                 caminhos_imagens[nome_pasta] = []
 
-            caminhos_imagens[nome_pasta].extend(imagens)
+            # Gera os caminhos baseados na URL pública
+            caminhos_imagens[nome_pasta].extend([
+                f"http://localhost:5000/{img_path}" for img_path in imagens
+            ])
 
     return jsonify({"sucesso": caminhos_imagens}), 200
