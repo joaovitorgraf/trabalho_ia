@@ -36,7 +36,7 @@ def processar_imagens_e_gerar_csv(
         os.path.join(d, f)
         for d, _, arquivos in os.walk(pasta_media)
         for f in arquivos
-        if f.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))
+        if f.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".bmp"))
     ]
 
     total = len(imagens)

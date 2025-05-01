@@ -49,7 +49,7 @@ def get_urlImage(pasta_base="media"):
         imagens = [
             os.path.join(root, nome_arquivo).replace("\\", "/")
             for nome_arquivo in arquivos
-            if nome_arquivo.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))
+            if nome_arquivo.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".bmp"))
         ]
 
         if imagens:
@@ -57,9 +57,8 @@ def get_urlImage(pasta_base="media"):
             if nome_pasta not in caminhos_imagens:
                 caminhos_imagens[nome_pasta] = []
 
-            caminhos_imagens[nome_pasta].extend([
-                f"http://localhost:5000/{img_path}"
-                for img_path in imagens
-            ])
+            caminhos_imagens[nome_pasta].extend(
+                [f"http://localhost:5000/{img_path}" for img_path in imagens]
+            )
 
     return jsonify({"sucesso": caminhos_imagens}), 200
