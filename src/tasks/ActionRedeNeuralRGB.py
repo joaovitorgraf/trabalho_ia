@@ -78,4 +78,4 @@ def treinar_rede(camadas: int, neuronios: int, epocas: int):
         }
 
     except Exception as e:
-        return jsonify({"erro": str(e)}), 500
+        return {"erro": str(e)}, 500
