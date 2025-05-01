@@ -1,4 +1,5 @@
 from flask import request, jsonify
+from src.tasks.ActionRedeNeuralRGB import treinar_rede
 
 camadas = None
 neuronios = None
@@ -30,16 +31,5 @@ def Parametros():
     if epocas <= 0:
         return jsonify({"erro": "Epocas não ser 0 ou menor."}), 400
 
-    return jsonify({"sucesso": "Parâmetros definidos com sucesso."})
-
-
-def get_camadas():
-    return camadas
-
-
-def get_neuronios():
-    return neuronios
-
-
-def get_epocas():
-    return epocas
+    resultado = treinar_rede(camadas, neuronios, epocas)
+    return jsonify(resultado), 200

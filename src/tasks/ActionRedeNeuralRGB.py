@@ -1,70 +1,81 @@
+import os
 import tensorflow as tf
 import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-dataset = pd.read_csv("/personagens.csv")
-
-dataset.shape
-
-dataset.head()
-
-dataset.tail()
-
-sns.countplot(x="classe", data=dataset)
-
-X = dataset.iloc[:, 0:6].values
-
-y = dataset.iloc[:, 6].values
-
-y
-
-y = y == "Bart"
-
-y
-
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix
 
-X_treinamento, X_teste, y_treinamento, y_teste = train_test_split(X, y, test_size=0.2)
 
-X_treinamento.shape, y_treinamento.shape
+def treinar_rede(camadas: int, neuronios: int, epocas: int):
+    try:
+        # Carregar dataset
+        caminho_csv = os.path.join(os.getcwd(), "personagens.csv")
+        dataset = pd.read_csv(caminho_csv)
 
-X_teste.shape, y_teste.shape
+        # Verificar estrutura do dataset
+        if dataset.shape[1] < 7:  # 6 atributos + 1 classe
+            return {"erro": "Estrutura do CSV inválida"}, 400
 
-rede_neural = tf.keras.models.Sequential()
-rede_neural.add(tf.keras.layers.Dense(units=4, activation="relu", input_shape=(6,)))
-rede_neural.add(tf.keras.layers.Dense(units=4, activation="relu"))
-rede_neural.add(tf.keras.layers.Dense(units=4, activation="relu"))
-rede_neural.add(tf.keras.layers.Dense(units=1, activation="sigmoid"))
+        # Preparar dados
+        X = dataset.iloc[:, 0:6].values
+        y = dataset.iloc[:, 6].values
 
-rede_neural.summary()
+        # Converter classes para binário (assume que a classe é o primeiro personagem)
+        personagens = sorted(list(set(y)))
+        y = y == personagens[0]  # Primeiro personagem como classe positiva
 
-rede_neural.compile(optimizer="Adam", loss="binary_crossentropy", metrics=["accuracy"])
+        # Dividir dados
+        X_treinamento, X_teste, y_treinamento, y_teste = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
 
-historico = rede_neural.fit(
-    X_treinamento, y_treinamento, epochs=1000, validation_split=0.1
-)
+        # Construir modelo
+        rede_neural = tf.keras.models.Sequential()
 
-historico.history.keys()
+        # Camada de entrada
+        rede_neural.add(
+            tf.keras.layers.Dense(units=neuronios, activation="relu", input_shape=(6,))
+        )
 
-plt.plot(historico.history["val_loss"])
+        # Camadas ocultas
+        for _ in range(camadas - 1):
+            rede_neural.add(tf.keras.layers.Dense(units=neuronios, activation="relu"))
 
-plt.plot(historico.history["val_accuracy"])
+        # Camada de saída
+        rede_neural.add(tf.keras.layers.Dense(units=1, activation="sigmoid"))
 
-previsoes = rede_neural.predict(X_teste)
-previsoes
+        # Compilar e treinar
+        rede_neural.compile(
+            optimizer="Adam", loss="binary_crossentropy", metrics=["accuracy"]
+        )
 
-previsoes = previsoes > 0.5
-previsoes
+        historico = rede_neural.fit(
+            X_treinamento, y_treinamento, epochs=epocas, validation_split=0.1, verbose=0
+        )
 
-from sklearn.metrics import accuracy_score
+        # Avaliar
+        previsoes = rede_neural.predict(X_teste) > 0.5
+        acuracia = accuracy_score(y_teste, previsoes)
+        matriz_confusao = confusion_matrix(y_teste, previsoes).tolist()
 
-accuracy_score(previsoes, y_teste)
+        # Salvar modelo
+        rede_neural.save("modelo_rede_neural.keras")
 
-from sklearn.metrics import confusion_matrix
+        # Salvar informações dos personagens
+        np.save("personagens.npy", np.array(personagens))
 
-cm = confusion_matrix(y_teste, previsoes)
-cm
+        return {
+            "acuracia": float(acuracia),
+            "matriz_confusao": matriz_confusao,
+            "personagens": personagens,
+            "personagem_alvo": personagens[0],
+            "historico": {
+                "loss": historico.history["loss"],
+                "accuracy": historico.history["accuracy"],
+                "val_loss": historico.history.get("val_loss", []),
+                "val_accuracy": historico.history.get("val_accuracy", []),
+            },
+        }
 
-sns.heatmap(cm, annot=True)
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
