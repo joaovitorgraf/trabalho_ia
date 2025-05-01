@@ -53,7 +53,7 @@ def Treinar_modelo():
         X_treinamento, y_treinamento, epochs=epocas, validation_split=0.1, verbose=0
     )
 
-    modelo.save("modelo_rede_neural.keras")
+    modelo.save("modelos/rgb_model.keras")
 
     return jsonify(
         {
@@ -70,7 +70,7 @@ def Classificar_imagem():
     global modelo, nomes_classes
 
     if modelo is None:
-        if not os.path.exists("modelo_rede_neural.keras"):
+        if not os.path.exists("modelos/rgb_model.keras"):
             return (
                 jsonify(
                     {"erro": "Modelo não treinado. Use a rota /parametros primeiro."}
@@ -78,7 +78,7 @@ def Classificar_imagem():
                 400,
             )
 
-        modelo = tf.keras.models.load_model("modelo_rede_neural.keras")
+        modelo = tf.keras.models.load_model("modelos/rgb_model.keras")
         df = pd.read_csv("personagens.csv")
         nomes_classes = sorted(df["classe"].unique())
 

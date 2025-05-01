@@ -1,3 +1,6 @@
 media/*
 uploads/*
 mediaCNN/*
+src/__pycache__
+src/Controllers/__pycache__
+src/Routes/__pycache__
