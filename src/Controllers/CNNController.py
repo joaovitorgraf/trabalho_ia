@@ -60,8 +60,7 @@ def Classificar_imagem_CNN():
         return jsonify(
             {
                 "classe_prevista": classe_prevista,
-                "indice": int(indice_previsto),
-                "confidencia": float(np.max(predicao)),
+                "probabilidade": float(np.max(predicao)),
             }
         )
 
