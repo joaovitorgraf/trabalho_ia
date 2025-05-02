@@ -21,7 +21,6 @@ def Treinar_modelo():
     neuronios = int(dados.get("neuronios"))
     epocas = int(dados.get("epocas"))
 
-    # Lê o CSV com os dados já extraídos
     df = pd.read_csv("personagens.csv")
 
     X = df.iloc[:, 0:6].values
@@ -29,13 +28,12 @@ def Treinar_modelo():
     nomes_classes = sorted(np.unique(y_raw))
     y_map = {nome: idx for idx, nome in enumerate(nomes_classes)}
     y = np.array([y_map[nome] for nome in y_raw])
-    y = to_categorical(y)  # Multi-classe
+    y = to_categorical(y)
 
     X_treinamento, X_teste, y_treinamento, y_teste = train_test_split(
         X, y, test_size=0.2
     )
 
-    # Criação da rede neural com base nos parâmetros do usuário
     modelo = tf.keras.models.Sequential()
     modelo.add(
         tf.keras.layers.Dense(units=neuronios, activation="relu", input_shape=(6,))
@@ -53,7 +51,6 @@ def Treinar_modelo():
         X_treinamento, y_treinamento, epochs=epocas, validation_split=0.1, verbose=0
     )
 
-    # Calcula a acurácia final no conjunto de teste
     _, acuracia = modelo.evaluate(X_teste, y_teste, verbose=0)
 
     modelo.save("modelos/rgb_model.keras")
@@ -92,9 +89,8 @@ def Classificar_imagem():
     os.makedirs("uploads", exist_ok=True)
     imagem.save(caminho)
 
-    # Usa a função abaixo para gerar os 6 atributos da imagem
     atributos = extrair_atributos(caminho)
-    entrada = np.array([atributos])  # shape (1,6)
+    entrada = np.array([atributos])
 
     predicao = modelo.predict(entrada)
     indice_previsto = np.argmax(predicao)

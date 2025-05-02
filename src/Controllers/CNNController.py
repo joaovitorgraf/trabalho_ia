@@ -9,12 +9,10 @@ from PIL import Image
 
 def Classificar_imagem_CNN():
     try:
-        # Verifica se o modelo está salvo
         model_path = "modelos/cnn_model.keras"
         if not os.path.exists(model_path):
             return jsonify({"erro": "Rede ainda não foi treinada"}), 400
 
-        # Verifica se o arquivo foi enviado
         if "imagem" not in request.files:
             return jsonify({"erro": "Nenhuma imagem foi enviada"}), 400
 
@@ -22,24 +20,19 @@ def Classificar_imagem_CNN():
         if arquivo.filename == "":
             return jsonify({"erro": "Nome de arquivo inválido"}), 400
 
-        # Salva temporariamente a imagem
         caminho_temporario = os.path.join("mediaCNN", "temp_classificacao.jpg")
         arquivo.save(caminho_temporario)
 
-        # Carrega e pré-processa a imagem
         img = image.load_img(caminho_temporario, target_size=(64, 64))
         img_array = image.img_to_array(img)
         img_array = np.expand_dims(img_array, axis=0)
-        img_array = img_array / 255.0  # Normaliza como no treinamento
+        img_array = img_array / 255.0
 
-        # Carrega o modelo treinado
         modelo = load_model(model_path)
 
-        # Previsão
         predicao = modelo.predict(img_array)
         indice_previsto = np.argmax(predicao)
 
-        # Obtém os nomes das classes a partir da pasta de treino
         base_dir = "mediaCNN/base/training_set"
         classes = sorted(
             [
@@ -54,7 +47,6 @@ def Classificar_imagem_CNN():
             else "Classe desconhecida"
         )
 
-        # Remove a imagem temporária
         os.remove(caminho_temporario)
 
         return jsonify(

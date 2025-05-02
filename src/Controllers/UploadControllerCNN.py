@@ -35,17 +35,14 @@ def Upload_e_separar():
             400,
         )
 
-    # Limpar diretórios anteriores
     for pasta in [TEMP_PATH, TRAIN_DIR, TEST_DIR]:
         if os.path.exists(pasta):
             remover_com_permissao(pasta)
         os.makedirs(pasta)
 
-    # Salvar temporariamente
     caminho_arquivo = os.path.join(TEMP_PATH, arquivo.filename)
     arquivo.save(caminho_arquivo)
 
-    # Extrair
     if extensao == "zip":
         with zipfile.ZipFile(caminho_arquivo, "r") as zip_ref:
             zip_ref.extractall(TEMP_PATH)
@@ -53,8 +50,7 @@ def Upload_e_separar():
         with rarfile.RarFile(caminho_arquivo, "r") as rar_ref:
             rar_ref.extractall(TEMP_PATH)
 
-    # Separar em treino e teste
-    PORCENTAGEM_TESTE = 0.2  # 20% para teste
+    PORCENTAGEM_TESTE = 0.2
     classes = os.listdir(TEMP_PATH)
     for classe in classes:
         caminho_classe = os.path.join(TEMP_PATH, classe)

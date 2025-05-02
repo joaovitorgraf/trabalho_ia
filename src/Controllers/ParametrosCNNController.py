@@ -21,7 +21,6 @@ def Definir_parametros_e_treinar():
         if not os.path.exists(caminho_treino) or not os.path.exists(caminho_teste):
             return jsonify({"erro": "Pastas de treino/teste não encontradas"}), 400
 
-        # Geradores
         gerador_treinamento = ImageDataGenerator(
             rescale=1.0 / 255, rotation_range=7, horizontal_flip=True, zoom_range=0.2
         )
@@ -38,7 +37,6 @@ def Definir_parametros_e_treinar():
             shuffle=False,
         )
 
-        # Modelo
         modelo = Sequential()
 
         for _ in range(camadas):
@@ -60,11 +58,9 @@ def Definir_parametros_e_treinar():
             base_treinamento, epochs=epocas, validation_data=base_teste
         )
 
-        # Salva o modelo
         os.makedirs("modelos", exist_ok=True)
         modelo.save("modelos/cnn_model.keras")
 
-        # Obtém última acurácia de validação
         acuracia = (
             historico.history.get("val_accuracy")[-1]
             if historico.history.get("val_accuracy")
