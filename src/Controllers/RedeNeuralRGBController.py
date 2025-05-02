@@ -53,15 +53,16 @@ def Treinar_modelo():
         X_treinamento, y_treinamento, epochs=epocas, validation_split=0.1, verbose=0
     )
 
+    # Calcula a acurácia final no conjunto de teste
+    _, acuracia = modelo.evaluate(X_teste, y_teste, verbose=0)
+
     modelo.save("modelos/rgb_model.keras")
 
     return jsonify(
         {
             "mensagem": "Modelo treinado com sucesso!",
             "classes": nomes_classes,
-            "camadas": camadas,
-            "neuronios": neuronios,
-            "epocas": epocas,
+            "acuracia": round(float(acuracia), 4),
         }
     )
 

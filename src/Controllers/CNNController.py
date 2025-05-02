@@ -7,7 +7,7 @@ import os
 from PIL import Image
 
 
-def Classificar_imagem():
+def Classificar_imagem_CNN():
     try:
         # Verifica se o modelo está salvo
         model_path = "modelos/cnn_model.keras"
