@@ -13,7 +13,6 @@ def Definir_parametros_e_treinar():
         neuronios = dados.get("neuronios", 64)
         epocas = dados.get("epocas", 20)
 
-        # Caminhos
         caminho_base = "mediaCNN"
         caminho_treino = os.path.join(caminho_base, "base/training_set")
         caminho_teste = os.path.join(caminho_base, "base/test_set")
