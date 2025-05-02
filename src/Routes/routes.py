@@ -6,7 +6,7 @@ from src.Controllers.ProgressoController import obter_progresso
 from src.Controllers.RedeNeuralRGBController import Classificar_imagem, Treinar_modelo
 
 # Controllers da CNN
-from src.Controllers.CNNController import Classificar_imagem
+from src.Controllers.CNNController import Classificar_imagem_CNN
 from src.Controllers.ParametrosCNNController import Definir_parametros_e_treinar
 from src.Controllers.UploadControllerCNN import Upload_e_separar
 
@@ -24,4 +24,4 @@ routes.route("/classificar", methods=["POST"])(Classificar_imagem)
 # Rotas da Rede Neural Convolucional (CNN)
 routes.route("/cnn/parametros", methods=["POST"])(Definir_parametros_e_treinar)
 routes.route("/cnn/upload", methods=["POST"])(Upload_e_separar)
-routes.route("/cnn/classificar", methods=["POST"])(Classificar_imagem)
+routes.route("/cnn/classificar", methods=["POST"])(Classificar_imagem_CNN)
