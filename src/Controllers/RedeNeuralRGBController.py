@@ -81,7 +81,8 @@ def Classificar_imagem():
 
         modelo = tf.keras.models.load_model("modelos/rgb_model.keras")
         df = pd.read_csv("personagens.csv")
-        nomes_classes = sorted(df["classe"].unique())
+        nome_coluna_classe = df.columns[-1]
+        nomes_classes = sorted(df[nome_coluna_classe].unique())
 
     if "imagem" not in request.files:
         return jsonify({"erro": "Nenhuma imagem foi enviada."}), 400
