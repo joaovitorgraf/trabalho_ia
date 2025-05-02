@@ -18,7 +18,7 @@ def Gerar_csv():
         return jsonify({"error": "Lista de RGBs ou Header não enviados!"}), 400
 
     mensagem = processar_imagens_e_gerar_csv(PASTA_MEDIA, rgb, header)
-    atualizar_progresso(100)  # Finaliza a barra com 100%
+    atualizar_progresso(100)
     return jsonify({"mensagem": mensagem})
 
 
@@ -71,7 +71,6 @@ def processar_imagens_e_gerar_csv(
         contador["Classe"] = classe_dominante
         dados_csv.append(contador)
 
-        # Atualiza progresso
         progresso = int(((i + 1) / total) * 100)
         atualizar_progresso(progresso)
 
